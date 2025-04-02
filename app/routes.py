@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.models.models import db, User, Test, TestCase, Result
+from app.models.all import db, User, Test, TestCase, Result
 
 routes = Blueprint('routes', __name__)
 

@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 # from app.models import db
 # from models import User
-from app.models.models import User
+from app.models.all import User
 from app import db
 
 auth_bp = Blueprint('auth', __name__)
@@ -11,9 +11,18 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
+
+    # Validate input data
+    if not data or 'username' not in data or 'password' not in data or 'role' not in data:
+        return jsonify(message="Missing required fields: 'username', 'password', or 'role'"), 400
+
     username = data['username']
     password = generate_password_hash(data['password'])
     role = data['role']  # 'TM' or 'Student'
+
+    # Check if the username already exists
+    if User.query.filter_by(username=username).first():
+        return jsonify(message="Username already exists"), 409
 
     new_user = User(username=username, password=password, role=role)
 

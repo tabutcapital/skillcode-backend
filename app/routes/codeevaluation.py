@@ -1,10 +1,9 @@
 from flask import Blueprint, request, jsonify
-from app import db
-from models import TestCase
+from app.models.all import db, TestCase  # Ensure correct imports
 
-results_bp = Blueprint('results', __name__)
+results_bp = Blueprint('results', __name__)  # Define the blueprint
 
-@results_bp.route('/evaluate', methods=['POST'])
+@results_bp.route('/evaluate', methods=['POST'])  # Register the route under the blueprint
 def evaluate_code():
     data = request.get_json()
     code = data['code']
@@ -24,3 +23,4 @@ def evaluate_code():
             results.append({"test_case_id": test_case.id, "passed": False})
 
     return jsonify(results=results), 200
+

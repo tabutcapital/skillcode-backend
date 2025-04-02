@@ -1,11 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
 from flask_login import login_required, current_user
-from app import db
-from models import Result, Test
+from app.models.all import db, Result
 
-results_bp = Blueprint('results', __name__)
+# Use the 'routes' blueprint instead of creating a new one
+from app.routes import routes
 
-@results_bp.route('/submit', methods=['POST'])
+@routes.route('/submit', methods=['POST'])
 @login_required
 def submit_result():
     if current_user.role != 'Student':
@@ -25,7 +25,7 @@ def submit_result():
         db.session.rollback()
         return jsonify(message="Error submitting result", error=str(e)), 500
 
-@results_bp.route('/view', methods=['GET'])
+@routes.route('/view', methods=['GET'])
 @login_required
 def view_results():
     results = Result.query.filter_by(student_id=current_user.id).all()
