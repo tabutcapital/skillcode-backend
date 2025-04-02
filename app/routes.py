@@ -9,7 +9,7 @@ routes = Blueprint('routes', __name__)
 def signup():
     data = request.get_json()
     hashed_password = generate_password_hash(data['password'])
-    new_user = User(username=data['username'], password=hashed_password, role=data['role'])
+    new_user = User(email=data['email'], password=hashed_password, role=data['role'])
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"message": "User created successfully!"}), 201
@@ -18,10 +18,10 @@ def signup():
 @routes.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    user = User.query.filter_by(username=data['username']).first()
+    user = User.query.filter_by(email=data['email']).first()
     if user and check_password_hash(user.password, data['password']):
         return jsonify({"message": "Login successful!", "role": user.role}), 200
-    return jsonify({"message": "Invalid username or password"}), 401
+    return jsonify({"message": "Invalid email or password"}), 401
 
 # CRUD for Test
 @routes.route('/tests', methods=['POST'])

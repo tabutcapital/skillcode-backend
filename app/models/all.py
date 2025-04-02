@@ -8,11 +8,12 @@ class User(db.Model, UserMixin):  # Inherit from UserMixin to add required prope
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)  # Added first_name field
+    email = db.Column(db.String(120), unique=True, nullable=False)  # Changed from username to email
     password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(20), nullable=False)
-    tests = db.relationship('Test', backref='creator', lazy=True)
-    results = db.relationship('Result', backref='student', lazy=True)
+    test_id = db.relationship('Test', backref='creator', lazy=True)  # Renamed from tests to test_ids
+    result_id = db.relationship('Result', backref='student', lazy=True)  # Renamed from results to result_ids
 
     # UserMixin provides the following properties:
     # - is_authenticated
@@ -22,7 +23,7 @@ class User(db.Model, UserMixin):  # Inherit from UserMixin to add required prope
     # No additional implementation is needed unless you want to customize behavior.
 
     def __repr__(self):
-        return f'<User {self.username}>'
+        return f'<User {self.email}>'  # Updated to use email
 
 # Test Model (created by TM)
 class Test(db.Model):

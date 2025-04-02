@@ -16,3 +16,10 @@ def create_test():
 def get_tests():
     tests = Test.query.all()
     return jsonify([{"id": test.id, "name": test.name, "description": test.description} for test in tests]), 200
+
+@routes.route('/tests/<int:id>', methods=['GET'])
+def get_test_by_id(id):
+    test = Test.query.get(id)
+    if not test:
+        return jsonify({"error": "Test not found"}), 404
+    return jsonify({"id": test.id, "name": test.name, "description": test.description}), 200

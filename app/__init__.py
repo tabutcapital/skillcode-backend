@@ -2,6 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_cors import CORS  # Import Flask-CORS
 from app.models.all import db, User  # Ensure this is the correct import
 from app.routes import routes  # Ensure this import works after fixing the routes package
 from app.routes.auth import auth_bp  # Import the auth blueprint
@@ -16,6 +17,9 @@ def create_app():
 
     # Set a secret key for session management
     app.secret_key = 'your-secret-key'  # Replace 'your-secret-key' with a secure, random value
+
+    # Enable CORS for all origins
+    CORS(app)
 
     # Initialize extensions
     db.init_app(app)  # Ensure db is initialized with the app
@@ -32,4 +36,7 @@ def create_app():
     app.register_blueprint(routes, url_prefix='/')
     app.register_blueprint(results_bp)
 
+    print("Registered routes:")
+    for rule in app.url_map.iter_rules():
+        print(rule)
     return app
